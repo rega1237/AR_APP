@@ -17,7 +17,7 @@ Success Criteria:
 - Failing RSpec tests for authentication are written and then pass
 - Admin layout is isolated with basic Tailwind CSS styling
 - Admin users can sign in, sign out, and access restricted `/admin` routes
-Status: Not Started
+Status: Complete
 
 ## Stage 3: Core Client Model
 Goal: Implement the `Client` model (Restaurants) with its base attributes and validations.
