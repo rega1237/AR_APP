@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   namespace :admin do
     root to: "dashboard#index"
     get "dashboard/index"
+    resources :clients
   end
 
   # Sesiones de usuario (Admin)
