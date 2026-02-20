@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Admin - AR Menu" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-gray-100 font-sans leading-normal tracking-normal text-gray-800">
+
+    <!-- Top Navbar -->
+    <header class="bg-white shadow">
+      <div class="mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 justify-between">
+          <div class="flex">
+            <div class="flex flex-shrink-0 items-center">
+              <span class="text-xl font-bold font-serif text-indigo-600">AR Menu Panel</span>
+            </div>
+            <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
+              <%= link_to "Dashboard", admin_dashboard_index_path, class: "border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
+              <!-- More links here later (Clients, Settings, etc.) -->
+            </div>
+          </div>
+          <div class="hidden sm:ml-6 sm:flex sm:items-center">
+            <% if authenticated? %>
+              <span class="text-sm text-gray-500 mr-4"><%= Current.user.email_address %></span>
+              <%= button_to "Sign out", session_path, method: :delete, class: "text-sm text-red-600 hover:text-red-900 font-medium bg-transparent border-0 cursor-pointer" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="py-10">
+      <main>
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <% if flash[:notice] %>
+            <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
+              <%= flash[:notice] %>
+            </div>
+          <% end %>
+          <% if flash[:alert] %>
+            <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+              <%= flash[:alert] %>
+            </div>
+          <% end %>
+
+          <%= yield %>
+        </div>
+      </main>
+    </div>
+
+  </body>
+</html>
