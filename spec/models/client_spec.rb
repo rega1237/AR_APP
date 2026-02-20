@@ -19,6 +19,12 @@ RSpec.describe Client, type: :model do
       expect(subject.slug).to eq('test-restaurant')
     end
 
+    it 'generates a slug from name if empty string is provided' do
+      subject.slug = ""
+      subject.valid?
+      expect(subject.slug).to eq('test-restaurant')
+    end
+
     it 'is invalid with a duplicate slug' do
       Client.create!(name: 'Other', slug: 'test-restaurant', contact_email: 'other@example.com')
       expect(subject).to_not be_valid

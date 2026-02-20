@@ -16,6 +16,6 @@ class Client < ApplicationRecord
   end
 
   def generate_slug
-    self.slug ||= name.parameterize if name.present?
+    self.slug = name.parameterize if slug.blank? && name.present?
   end
 end

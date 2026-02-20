@@ -25,7 +25,7 @@ Success Criteria:
 - Failing RSpec tests for `Client` validations (presence of name, valid email, unique slug) are written and go green
 - Active Storage is configured for attaching a logo
 - `Admin::ClientsController` allows CRUD operations with proper form inputs
-Status: Not Started
+Status: Complete
 
 ## Stage 4: Menus, Categories, and Dishes Models
 Goal: Establish the relational structure where Clients have Menus, Menus have Categories, and Categories have Dishes.
