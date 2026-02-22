@@ -41,7 +41,7 @@ Success Criteria:
 - RSpec Feature/System tests prove an admin can create a menu for a client, add a category, and upload a dish
 - Views use Tailwind CSS and keep the UI clean
 - No N+1 queries in list views
-Status: Not Started
+Status: In Progress
 
 > [!NOTE]
 > Una vez aprobadas estas 5 etapas, pasaremos a la fase de Ejecución (Execution) para la Etapa 1. Todos los pasos incluirán pruebas automatizadas (TDD) antes de implementarse, según las reglas del proyecto.

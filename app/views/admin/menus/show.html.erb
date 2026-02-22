@@ -1,0 +1,82 @@
+<div class="mx-auto md:w-3/4 w-full flex flex-col items-start gap-y-6">
+  <div class="w-full flex justify-between items-center">
+    <h1 class="font-bold text-4xl"><%= @menu.name %></h1>
+    <div class="space-x-2">
+      <%= link_to "Edit this menu", edit_admin_menu_path(@menu), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+      <%= link_to "Back to client", admin_client_path(@menu.client), class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    </div>
+  </div>
+
+  <% if @menu.description.present? %>
+    <p class="text-gray-600 italic"><%= @menu.description %></p>
+  <% end %>
+
+  <%# Categories Section %>
+  <div class="w-full mt-8 border-t pt-6">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-2xl font-semibold">Categories</h2>
+      <%= link_to "Add Category", new_admin_menu_category_path(@menu), class: "rounded-lg py-2 px-4 bg-indigo-600 text-white font-medium hover:bg-indigo-500" %>
+    </div>
+
+    <% if @menu.categories.any? %>
+      <div class="space-y-6">
+        <% @menu.categories.order(:position).each do |category| %>
+          <div class="bg-white shadow sm:rounded-lg border border-gray-200 p-4">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <h3 class="text-lg font-bold text-gray-900"><%= category.name %></h3>
+                <p class="text-sm text-gray-500"><%= category.description %></p>
+              </div>
+              <div class="flex space-x-2">
+                <%= link_to "Edit", edit_admin_category_path(category), class: "text-indigo-600 hover:text-indigo-900 text-sm font-medium" %>
+                <%= button_to "Delete", admin_category_path(category), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-900 text-sm font-medium" %>
+              </div>
+            </div>
+
+            <%# Dishes Section %>
+            <div class="mt-4 pl-4 border-l-2 border-indigo-100">
+              <div class="flex justify-between items-center mb-3">
+                <h4 class="text-md font-semibold text-gray-700">Dishes</h4>
+                <%= link_to "Add Dish", new_admin_category_dish_path(category), class: "text-sm text-indigo-600 hover:text-indigo-800 font-medium" %>
+              </div>
+
+              <% if category.dishes.any? %>
+                <ul role="list" class="divide-y divide-gray-100">
+                  <% category.dishes.order(:position).each do |dish| %>
+                    <li class="flex items-center justify-between py-2">
+                      <div class="flex items-center gap-x-3">
+                        <% if dish.photo.attached? && dish.photo.persisted? %>
+                          <%= image_tag dish.photo, class: "h-10 w-10 rounded-full object-cover" %>
+                        <% else %>
+                          <span class="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                          </span>
+                        <% end %>
+                        <div class="min-w-0">
+                          <p class="text-sm font-semibold leading-6 text-gray-900"><%= dish.name %></p>
+                          <p class="mt-1 truncate text-xs leading-5 text-gray-500">$<%= dish.price %></p>
+                        </div>
+                      </div>
+                      <div class="flex flex-none items-center gap-x-4">
+                        <% if dish.model_3d.attached? %>
+                          <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">3D</span>
+                        <% end %>
+                        <%= link_to "Edit", edit_admin_dish_path(dish), class: "hidden sm:block text-sm font-semibold leading-6 text-indigo-600 hover:text-indigo-500" %>
+                      </div>
+                    </li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <p class="text-sm text-gray-500">No dishes in this category yet.</p>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center bg-gray-50 py-8 rounded-lg border-2 border-dashed border-gray-300">
+        <p class="text-sm text-gray-500">No categories added to this menu yet.</p>
+      </div>
+    <% end %>
+  </div>
+</div>

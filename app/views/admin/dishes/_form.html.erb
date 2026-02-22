@@ -1,0 +1,72 @@
+<%= form_with(model: [:admin, @category, @dish], class: "contents") do |form| %>
+  <% if @dish.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+      <h2><%= pluralize(@dish.errors.count, "error") %> prohibited this dish from being saved:</h2>
+      <ul>
+        <% @dish.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :description %>
+    <%= form.text_area :description, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="my-5 flex gap-4">
+    <div class="flex-1">
+      <%= form.label :price %>
+      <%= form.number_field :price, step: 0.01, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+    <div class="flex-1">
+      <%= form.label :position, "Position (Ordering)" %>
+      <%= form.number_field :position, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+  </div>
+
+  <div class="my-5 flex items-center gap-2">
+    <%= form.check_box :is_visible, class: "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" %>
+    <%= form.label :is_visible, "Visible to customers?", class: "font-medium text-gray-700" %>
+  </div>
+
+  <div class="my-8 border-t border-gray-200 pt-6">
+    <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Media Files</h3>
+    
+    <div class="space-y-6">
+      <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4">
+        <%= form.label :photo, class: "block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5" %>
+        <div class="mt-2 sm:col-span-2 sm:mt-0">
+          <div class="flex max-w-2xl items-center gap-x-3">
+            <% if @dish.photo.attached? && @dish.persisted? %>
+              <%= image_tag @dish.photo, class: "h-12 w-12 rounded object-cover shadow" %>
+            <% end %>
+            <%= form.file_field :photo, accept: 'image/*', class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4">
+        <%= form.label :model_3d, "3D Model (.glb / .usdz)", class: "block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5" %>
+        <div class="mt-2 sm:col-span-2 sm:mt-0">
+          <div class="flex max-w-2xl items-center gap-x-3">
+            <% if @dish.model_3d.attached? && @dish.persisted? %>
+               <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Model Uploaded</span>
+            <% end %>
+            <%= form.file_field :model_3d, accept: '.glb,.usdz', class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="inline mt-4 border-t border-gray-200 pt-6">
+    <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>
