@@ -1,5 +1,6 @@
 class Client < ApplicationRecord
   has_one_attached :logo
+  has_many :menus, dependent: :destroy
 
   validates :name, presence: true
   validates :slug, presence: true, uniqueness: true, format: { with: /\A[a-z0-9-]+\z/, message: "only allows lowercase letters, numbers and hyphens" }
