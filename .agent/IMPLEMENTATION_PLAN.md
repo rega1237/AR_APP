@@ -36,12 +36,12 @@ Success Criteria:
 Status: Complete
 
 ## Stage 5: Nested Admin Controllers
-Goal: Complete the UI for admins to manage the nested resources (Menus, Categories, Dishes).
-Success Criteria:
+Goal: Administrate menus, categories, and dishes
+Success Criteria: Nested routing, controllers, and views successfully manage creation of these models.
 - RSpec Feature/System tests prove an admin can create a menu for a client, add a category, and upload a dish
 - Views use Tailwind CSS and keep the UI clean
 - No N+1 queries in list views
-Status: In Progress
+Status: Complete
 
 > [!NOTE]
 > Una vez aprobadas estas 5 etapas, pasaremos a la fase de Ejecución (Execution) para la Etapa 1. Todos los pasos incluirán pruebas automatizadas (TDD) antes de implementarse, según las reglas del proyecto.
