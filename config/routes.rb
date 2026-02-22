@@ -11,6 +11,12 @@ Rails.application.routes.draw do
     end
   end
 
+  # Public-Facing Menus and AR Views
+  namespace :public, path: "/v" do
+    get "/:client_slug", to: "menus#show", as: :client_menu
+    get "/:client_slug/d/:id", to: "dishes#show", as: :client_dish
+  end
+
   # Sesiones de usuario (Admin)
   resource :session, only: [ :new, :create, :destroy ]
   resources :passwords, param: :token, only: [ :new, :create, :edit, :update ]
