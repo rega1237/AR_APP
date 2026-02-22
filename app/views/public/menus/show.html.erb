@@ -1,4 +1,95 @@
-<div>
-  <h1 class="font-bold text-4xl">Public::Menus#show</h1>
-  <p>Find me in app/views/public/menus/show.html.erb</p>
+<% content_for :title, "#{@client.name} Menu" %>
+
+<div class="min-h-screen bg-gray-50 pb-12">
+  <!-- Client Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-10">
+    <div class="max-w-3xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <% if @client.logo.attached? %>
+          <%= image_tag @client.logo.variant(resize_to_limit: [120, 120]), class: "h-12 w-12 rounded-full object-cover border border-gray-200" %>
+        <% else %>
+          <div class="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center border border-gray-200">
+            <span class="text-indigo-600 font-bold text-lg"><%= @client.name.first %></span>
+          </div>
+        <% end %>
+        <h1 class="text-xl font-bold text-gray-900 truncate max-w-xs"><%= @client.name %></h1>
+      </div>
+    </div>
+  </header>
+
+  <!-- Menus and Categories -->
+  <main class="max-w-3xl mx-auto mt-6 px-4 sm:px-6 lg:px-8 space-y-8">
+    <% @client.menus.includes(categories: { dishes: { photo_attachment: :blob, model_3d_attachment: :blob } }).each do |menu| %>
+      <section class="menu-section">
+        <h2 class="text-2xl font-extrabold text-gray-900 tracking-tight text-center mb-6"><%= menu.name %></h2>
+        
+        <% if menu.description.present? %>
+          <p class="text-gray-500 text-center text-sm mb-6"><%= menu.description %></p>
+        <% end %>
+
+        <div class="space-y-10">
+          <% menu.categories.each do |category| %>
+            <% next if category.dishes.empty? %>
+            <div class="category-block">
+              <h3 class="text-lg font-bold text-gray-800 border-b-2 border-indigo-100 pb-2 mb-4 uppercase tracking-wider text-sm"><%= category.name %></h3>
+              
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <% category.dishes.each do |dish| %>
+                  <div class="relative flex bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-200">
+                    <!-- Photo -->
+                    <% if dish.photo.attached? %>
+                      <div class="shrink-0 w-1/3">
+                        <%= image_tag dish.photo.variant(resize_to_fill: [300, 300]), class: "h-full w-full object-cover" %>
+                      </div>
+                    <% else %>
+                      <div class="shrink-0 w-1/3 bg-gray-100 flex items-center justify-center">
+                        <svg class="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                      </div>
+                    <% end %>
+
+                    <!-- Dish Info -->
+                    <div class="flex-1 p-4 flex flex-col justify-between">
+                      <div>
+                        <div class="flex justify-between items-start">
+                          <h4 class="text-base font-bold text-gray-900 leading-tight"><%= dish.name %></h4>
+                          <p class="text-base font-semibold text-indigo-600 ml-2 whitespace-nowrap"><%= number_to_currency(dish.price) %></p>
+                        </div>
+                        <% if dish.description.present? %>
+                          <p class="mt-1 text-sm text-gray-500 line-clamp-2"><%= dish.description %></p>
+                        <% end %>
+                      </div>
+
+                      <!-- 3D AR Badge / Button -->
+                      <% if dish.model_3d.attached? %>
+                        <div class="mt-4">
+                          <%= link_to public_client_dish_path(@client.slug, dish.id), class: "inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-semibold rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 w-full justify-center group" do %>
+                            <svg class="mr-1.5 h-4 w-4 text-white animate-pulse" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                            </svg>
+                            Ver en AR 3D
+                          <% end %>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+    
+    <% if @client.menus.empty? %>
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No menus available</h3>
+        <p class="mt-1 text-sm text-gray-500">This restaurant hasn't added any dishes yet.</p>
+      </div>
+    <% end %>
+  </main>
 </div>
