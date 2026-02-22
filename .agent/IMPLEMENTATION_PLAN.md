@@ -33,7 +33,7 @@ Success Criteria:
 - RSpec Unit tests verify all `has_many` and `belongs_to` associations
 - RSpec Unit tests verify validations (e.g., Dish price must be positive)
 - Active Storage is attached to `Dish` for photo and `.glb`/`.usdz` 3D model
-Status: Not Started
+Status: Complete
 
 ## Stage 5: Nested Admin Controllers
 Goal: Complete the UI for admins to manage the nested resources (Menus, Categories, Dishes).
