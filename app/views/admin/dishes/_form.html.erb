@@ -53,13 +53,25 @@
       </div>
 
       <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4">
-        <%= form.label :model_3d, "3D Model (.glb / .usdz)", class: "block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5" %>
+        <%= form.label :model_3d, "3D Model (Main - .glb)", class: "block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5" %>
         <div class="mt-2 sm:col-span-2 sm:mt-0">
           <div class="flex max-w-2xl items-center gap-x-3">
             <% if @dish.model_3d.attached? && @dish.persisted? %>
-               <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Model Uploaded</span>
+               <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">GLB Uploaded</span>
             <% end %>
-            <%= form.file_field :model_3d, accept: '.glb,.usdz', class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+            <%= form.file_field :model_3d, accept: '.glb', class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 pt-4">
+        <%= form.label :model_usdz, "3D Model (iOS - .usdz)", class: "block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5" %>
+        <div class="mt-2 sm:col-span-2 sm:mt-0">
+          <div class="flex max-w-2xl items-center gap-x-3">
+            <% if @dish.model_usdz.attached? && @dish.persisted? %>
+               <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">USDZ Uploaded</span>
+            <% end %>
+            <%= form.file_field :model_usdz, accept: '.usdz', class: "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
           </div>
         </div>
       </div>

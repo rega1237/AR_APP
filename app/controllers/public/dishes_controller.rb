@@ -1,6 +1,7 @@
 module Public
   class DishesController < ApplicationController
     allow_unauthenticated_access
+    layout 'public'
 
     def show
       @client = Client.find_by!(slug: params[:client_slug])

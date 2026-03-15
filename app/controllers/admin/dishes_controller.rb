@@ -43,6 +43,6 @@ class Admin::DishesController < Admin::BaseController
     end
 
     def dish_params
-      params.expect(dish: [ :name, :description, :price, :position, :is_visible, :photo, :model_3d ])
+      params.expect(dish: [ :name, :description, :price, :position, :is_visible, :photo, :model_3d, :model_usdz ])
     end
 end
