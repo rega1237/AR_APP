@@ -6,8 +6,8 @@ Rails.application.configure do
   # CORS configuration for mobile/AR access via ngrok
   config.middleware.insert_before 0, Rack::Cors do
     allow do
-      origins '*'
-      resource '*', headers: :any, methods: [:get, :options]
+      origins "*"
+      resource "*", headers: :any, methods: [ :get, :options ]
     end
   end
 
@@ -79,12 +79,13 @@ Rails.application.configure do
   # config.generators.apply_rubocop_autocorrect_after_generate!
 
   config.hosts << /.*\.ngrok-free\.app/
+  config.hosts << /.*\.ngrok\.io/
+  config.hosts << /.*\.ngrok\.app/
 
-  # Use ngrok host if available, otherwise fallback to localhost
-  ngrok_host = "a41a-159-26-100-228.ngrok-free.app"
-  config.action_mailer.default_url_options = { host: ngrok_host, protocol: 'https' }
-  config.action_controller.default_url_options = { host: ngrok_host, protocol: 'https' }
-  
-  # Ensure ActiveStorage also uses the correct protocol
-  Rails.application.routes.default_url_options = config.action_controller.default_url_options
+  # Let ActionMailer use localhost, but models will use relative paths
+  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+
+  # Remove forced default_url_options so Rails uses the current request's host
+  # config.action_controller.default_url_options = { host: ngrok_host, protocol: 'https' }
+  # Rails.application.routes.default_url_options = config.action_controller.default_url_options
 end

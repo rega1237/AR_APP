@@ -11,26 +11,17 @@
     <% end %>
   </div>
 
-  <!-- 3D Component Content -->
-  <div class="relative w-full h-full flex items-center justify-center">
+<!-- 3D Component Content -->
+  <div class="relative w-full h-full flex items-center justify-center" data-controller="ar">
     <% if @dish.model_3d.attached? %>
-      <% 
-        usdz_url = rails_blob_url(@dish.model_usdz) if @dish.model_usdz.attached?
-        if usdz_url.present?
-          separator = usdz_url.include?('?') ? '&' : '?'
-          # allowsContentScaling=0 is THE fix for the jumping zoom on iOS
-          usdz_url = "#{usdz_url}#{separator}filename=#{@dish.name.parameterize}.usdz#allowsContentScaling=0"
-        end
-      %>
-      
       <model-viewer 
         id="dish-viewer"
-        src="<%= rails_blob_url(@dish.model_3d) %>" 
-        ios-src="<%= usdz_url %>"
+        data-ar-target="viewer"
+        src="<%= rails_blob_path(@dish.model_3d) %>" 
+        ios-src="<%= @dish.model_usdz.attached? ? rails_blob_path(@dish.model_usdz) : nil %>"
         alt="<%= @dish.name %>" 
         ar 
-        ar-modes="quick-look webxr scene-viewer" 
-        ar-scale="fixed"
+        ar-modes="webxr scene-viewer quick-look" 
         camera-controls 
         auto-rotate
         rotation-speed="0.8"
@@ -38,9 +29,8 @@
         shadow-softness="0.4"
         exposure="1.3"
         environment-image="neutral"
-        class="w-full h-screen outline-none"
-        style="background: radial-gradient(circle at 50% 40%, #1c1917 0%, #0c0a09 100%);"
-        quick-look-browsers="safari chrome brave">
+        class="w-full h-screen outline-none z-0"
+        style="background: radial-gradient(circle at 50% 40%, #1c1917 0%, #0c0a09 100%);">
         
         <!-- Loading State -->
         <div slot="poster" class="flex flex-col items-center justify-center w-full h-full">
@@ -48,23 +38,45 @@
            <p class="text-stone-500 uppercase tracking-widest text-xs font-black animate-pulse">Preparando Vista 3D</p>
         </div>
 
-        <!-- Hidden default button, we trigger it with our custom UI -->
-        <button slot="ar-button" style="display: none;"></button>
+        <!-- We remove the slot="ar-button" so we can handle it completely outside model-viewer for pure native iOS behavior -->
       </model-viewer>
+
+      <!-- Custom AR Button placed OUTSIDE model-viewer to guarantee native iOS Quick Look tap -->
+      <% if @dish.model_usdz.attached? %>
+        <% usdz_url = rails_blob_path(@dish.model_usdz, disposition: "inline") %>
+        <a href="<%= usdz_url %>#allowsContentSpatialTracking=true" rel="ar" class="absolute bottom-12 left-1/2 -translate-x-1/2 w-[calc(100%-4rem)] max-w-md bg-white hover:bg-stone-100 text-black font-black py-5 rounded-2xl shadow-[0_10px_30px_rgba(255,255,255,0.2)] flex items-center justify-center space-x-4 transition-all active:scale-[0.97] z-50">
+          <img src="/icon.png" alt="AR" style="display: none;">
+          <div class="bg-black rounded-lg p-1">
+            <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-10.5v10.5" />
+            </svg>
+          </div>
+          <span class="text-lg uppercase tracking-wider">Ver en tu mesa</span>
+        </a>
+      <% else %>
+        <button data-ar-target="arButton" class="absolute bottom-12 left-1/2 -translate-x-1/2 w-[calc(100%-4rem)] max-w-md bg-white hover:bg-stone-100 text-black font-black py-5 rounded-2xl shadow-[0_10px_30px_rgba(255,255,255,0.2)] flex items-center justify-center space-x-4 transition-all active:scale-[0.97] z-50">
+          <div class="bg-black rounded-lg p-1">
+            <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-10.5v10.5" />
+            </svg>
+          </div>
+          <span class="text-lg uppercase tracking-wider">Ver en tu mesa</span>
+        </button>
+      <% end %>
     <% end %>
   </div>
 
-  <!-- Bottom Panel (Fixed) -->
-  <div class="absolute bottom-0 w-full p-8 pb-12 bg-gradient-to-t from-black via-black/90 to-transparent pointer-events-none">
+  <!-- Bottom Panel (Fixed) - Text Only -->
+  <div class="absolute bottom-0 w-full p-8 pb-32 bg-gradient-to-t from-black via-black/90 to-transparent z-50 pointer-events-none">
     <div class="max-w-md mx-auto pointer-events-auto">
       
-      <div class="flex items-end justify-between mb-8">
+      <!-- Titulos y Precios -->
+      <div class="flex items-end justify-between mb-2">
         <div class="flex-1 pr-6">
           <div class="flex items-center space-x-2 mb-2">
             <span class="bg-indigo-500/20 text-indigo-400 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-500/30 uppercase tracking-widest">Experiencia Virtual</span>
           </div>
           <h1 class="text-4xl font-black text-white leading-tight tracking-tight"><%= @dish.name %></h1>
-          <p class="text-stone-400 mt-2 text-sm font-medium leading-relaxed"><%= @dish.description %></p>
         </div>
         <div class="shrink-0 pb-1">
           <div class="bg-white text-black text-2xl font-black px-4 py-2 rounded-2xl shadow-[0_10px_30px_rgba(255,255,255,0.2)]">
@@ -72,34 +84,16 @@
           </div>
         </div>
       </div>
+      <p class="text-stone-400 text-sm font-medium leading-relaxed mb-4"><%= @dish.description %></p>
 
-      <button id="ar-trigger" class="w-full bg-white hover:bg-stone-100 text-black font-black py-5 rounded-2xl shadow-2xl flex items-center justify-center space-x-4 transition-all active:scale-[0.97]">
-        <div class="bg-black rounded-lg p-1">
-          <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-10.5v10.5" />
-          </svg>
-        </div>
-        <span class="text-lg uppercase tracking-wider">Ver en tu mesa</span>
-      </button>
-
-      <div class="mt-6 flex items-center justify-center space-x-2 opacity-40">
-        <div class="w-1 h-1 bg-white rounded-full"></div>
-        <p class="text-[9px] uppercase font-bold tracking-[0.2em]">Escala Real 1:1 Garantizada</p>
-        <div class="w-1 h-1 bg-white rounded-full"></div>
+      <!-- Escala Aviso -->
+      <div class="flex items-center justify-center space-x-2 opacity-50 mt-6 pb-2">
+         <div class="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse"></div>
+         <p class="text-[10px] uppercase font-bold text-yellow-500 tracking-[0.1em]">Nota: El tamaño AR depende de tu archivo 3D original.</p>
+         <div class="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse"></div>
       </div>
+
     </div>
   </div>
 </div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const viewer = document.getElementById('dish-viewer');
-    const trigger = document.getElementById('ar-trigger');
-
-    if (trigger && viewer) {
-      trigger.addEventListener('click', () => {
-        viewer.activateAR();
-      });
-    }
-  });
-</script>
