@@ -38,5 +38,11 @@ module ArApp
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Ensure 3D models are served inline for AR (QuickLook/iOS)
+    config.active_storage.content_types_allowed_inline += [
+      "model/vnd.usdz+zip",
+      "model/gltf-binary"
+    ]
   end
 end
